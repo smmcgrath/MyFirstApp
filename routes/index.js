@@ -76,6 +76,33 @@ var Comment = require('../models/comments');
        });
     });
 
+/* GET feed page. */
+router.get('/feed', function(req, res, next) {
+
+    try {
+        var jwtString = req.cookies.Authorization.split(" ");
+        var profile = verifyJwt(jwtString[1]);
+        if (profile) {
+            res.render('feed');
+        }
+    }catch (err) {
+        res.json({
+            "status": "error",
+            "body": [
+                "You are not logged in."
+            ]
+        });
+    }
+});
+
+/*
+ Verifies a JWT
+ */
+function verifyJwt(jwtString) {
+
+    var value = jwt.verify(jwtString, 'CSIsTheWorst');
+    return value;
+}
 
 module.exports = router;
 
